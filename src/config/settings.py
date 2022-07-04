@@ -21,3 +21,4 @@ class Setting:
 
     DATA_RANDOM_FOREST = f'{path_base}/../enums/random_forest/data_training/bd_random_forest.csv'
     MODEL_RANDOM_FOREST = f'{path_base}/../enums/random_forest/model/random_forest.pkl'
+    MODEL_LOGIT = f'{path_base}/../enums/logit/model/logit.pkl'

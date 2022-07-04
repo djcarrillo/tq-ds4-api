@@ -32,4 +32,4 @@ async def root():
 
 
 if __name__ == "__main__":
-    uvicorn.run(src, host="0.0.0.0", port=8000, workers=2)
+    uvicorn.run(src, host="0.0.0.0", port=8000)

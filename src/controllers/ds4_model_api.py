@@ -1,9 +1,9 @@
 import json
 import requests
-from src.config import settings
+from src.config.settings import Setting
 from fastapi import APIRouter, Depends, Response, status, HTTPException
 from src.clients.auth import validate_jwt
-from src.repositories import repository_prediction_forest
+from src.repositories.repository_prediction_forest import RandomForest
 
 
 ds4_model_api = APIRouter(
@@ -22,19 +22,29 @@ def test():
     return "status 200"
 
 
-@app.get('/info')
+@ds4_model_api.get('/info')
 async def model_info():
     return {
         'name': 'rando,_fores_ds4',
-        'version': settings.VERSION
+        'version': Setting.VERSION
     }
 
 
-@ds4_model_api.get(
+@ds4_model_api.post(
     "/prediction",
     status_code=status.HTTP_200_OK,
     summary="endpoint for get symbols",
 )
 async def prediction(cod_granel, min, max, cod_product, num_period):
-    prediction = repository_prediction.random_forest()
-    return json.dumps(prediction)
+    prediction = RandomForest()
+    data=[cod_granel,min,max,cod_product,num_period]
+#    data={
+#            'COD GRANEL': cod_granel,
+#             'Minimo': min,
+#             'Maximo': max,
+#             'Código producto': cod_product,
+#             'NumeroPeriodosToma': num_period
+#    }
+    response = prediction._prediction(medication_study=data)
+
+    return json.dumps({'prediction': response[0]})
