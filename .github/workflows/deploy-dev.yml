@@ -1,0 +1,71 @@
+name: Deploy Gwen to DEV
+on:
+  push:
+    branches:
+      - develop
+
+env:
+  SOLUTION_NAME: hty-gwen-dev-gcr-scraper
+  PROJECT_ID: serious-conduit-329515
+  IMAGE_NAME: gcr.io/serious-conduit-329515/hty-gwen-dev-gcr-scraper
+
+jobs:
+  deploy-to-cloud-run:
+    name: Deploy To Cloud Run
+    runs-on: ubuntu-18.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+
+      # Setup Auth for GCP SDK
+      - name: Gcloud SDK Auth config
+        uses: google-github-actions/auth@v0
+        with:
+          credentials_json: ${{ secrets.R2D2_CREDENTIALS }}
+
+      # Cloud SDK CLI setup
+      - name: Setup Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v0
+
+      # Configure Docker with gcloud
+      - name: Configure Docker
+        run: gcloud auth configure-docker
+
+      # Build the docker image via CloudBuild
+      - name: Build Container
+        run: |
+          gcloud config set project ${{ env.PROJECT_ID }}
+          gcloud config set run/region us-east1
+          gcloud builds submit --tag ${{ env.IMAGE_NAME }}
+      # Deploy to Cloud Run
+      - name: Deploy
+        run: |
+          gcloud run deploy ${{ env.SOLUTION_NAME }} \
+            --image ${{ env.IMAGE_NAME }} \
+            --region us-east1 \
+            --platform managed \
+            --memory 4000Mi \
+            --allow-unauthenticated \
+            --set-env-vars  "slack_user=Gwen-scrapper, \
+                            slack_channel=gwen_scraper_notifications, \
+                            bucket_name=hty-hunty-dev-gcs-catalogs, \
+                            bucket_name_result=hty-gwen-dev-gcs-results, \
+                            loc_gmaps_file_name=ctl_gmaps_locations.json, \
+                            loc_gnrl_file_name=ctl_locations.json, \
+                            ent_gcp_file_name=ctl_companies.json, \
+                            wmodality_gcp_file_name=ctl_work_modality.json, \
+                            MACHINE=GCP, \
+                            PAST_SCRAPER_URL=https://api-dev.hunty.cloud/vacancy/scraped-vacancy?origin=1, \
+                            CTL_LOCATIONS_URL=https://api-dev.hunty.cloud/vacancy/location?origin=1, \
+                            CTL_ENTERPRISE_URL=https://api-dev.hunty.cloud/vacancy/company?origin=1, \
+                            CTL_WORK_MODALITY_URL=https://api-dev.hunty.cloud/vacancy/modality?origin=1, \
+                            CTL_OFFICE_MODALITY_URL=https://api-dev.hunty.cloud/vacancy/office?origin=1, \
+                            NEW_VACANCIES_URL=https://api-dev.hunty.cloud/vacancy/scraped-vacancy-list, \
+                            VACANCIES_UPDATE_URL=https://api-dev.hunty.cloud/vacancy/scraped-vacancy/, \
+                            VACANCIES_STAGE_LOCATION=https://api-dev.hunty.cloud/vacancy/location-list, \
+                            VACANCIES_STAGE_ENTERPRISE=https://api-dev.hunty.cloud/vacancy/company-list" \
+            --set-secrets   "api_google_maps=ggl-resources-secret-googlemaps-key:latest, \
+                            slack_token=slk-gwen-secret-slack-key:latest, \
+                            VACANCY_CLR=hty-vacancy-api-secret-audience-url:latest" \
+            --service-account gwen-scraper@serious-conduit-329515.iam.gserviceaccount.com

@@ -4,6 +4,7 @@ from src.config.settings import Setting
 from fastapi import APIRouter, Depends, Response, status, HTTPException
 from src.clients.auth import validate_jwt
 from src.repositories.repository_prediction_forest import RandomForest
+from src.repositories.repository_prediction_logit import LogitModel
 
 
 ds4_model_api = APIRouter(
@@ -53,11 +54,10 @@ async def prediction(cod_granel, min, max, cod_product, num_period):
 @ds4_model_api.post(
     "/prediction_logit",
     status_code=status.HTTP_200_OK,
-    summary="endpoint for get symbols",
+    summary="endpoint for calculate the probability of passing a stability study",
 )
-async def prediction(cod_granel, min, max, cod_product, num_period):
-    prediction = RandomForest()
-    data=[cod_granel,min,max,cod_product,num_period]
-    response = prediction._prediction(medication_study=data)
+async def prediction(month, ATC):
+    prediction = LogitModel()
+    response = prediction._prediction(mes=month, ATC=ATC)
 
-    return json.dumps({'prediction': response[0]})
+    return json.dumps({'prediction': response})
