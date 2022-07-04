@@ -31,7 +31,7 @@ async def model_info():
 
 
 @ds4_model_api.post(
-    "/prediction",
+    "/prediction_forest",
     status_code=status.HTTP_200_OK,
     summary="endpoint for get symbols",
 )
@@ -45,6 +45,19 @@ async def prediction(cod_granel, min, max, cod_product, num_period):
 #             'Código producto': cod_product,
 #             'NumeroPeriodosToma': num_period
 #    }
+    response = prediction._prediction(medication_study=data)
+
+    return json.dumps({'prediction': response[0]})
+
+
+@ds4_model_api.post(
+    "/prediction_logit",
+    status_code=status.HTTP_200_OK,
+    summary="endpoint for get symbols",
+)
+async def prediction(cod_granel, min, max, cod_product, num_period):
+    prediction = RandomForest()
+    data=[cod_granel,min,max,cod_product,num_period]
     response = prediction._prediction(medication_study=data)
 
     return json.dumps({'prediction': response[0]})
