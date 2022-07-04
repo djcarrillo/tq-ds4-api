@@ -1,5 +1,6 @@
 import os
 
+path_base = os.path.dirname(os.path.realpath(__file__))
 
 class Setting:
 
@@ -17,3 +18,6 @@ class Setting:
     PASSWORD_AWS = os.getenv("password")
 
     x_auth_login_token = os.getenv("jwt")
+
+    DATA_RANDOM_FOREST = f'{path_base}/../enums/random_forest/data_training/bd_random_forest.csv'
+    MODEL_RANDOM_FOREST = f'{path_base}/../enums/random_forest/model/random_forest.pkl'

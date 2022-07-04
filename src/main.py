@@ -2,7 +2,7 @@ import uvicorn
 from fastapi import FastAPI
 from starlette.responses import RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
-from controllers import empowerment
+from src.controllers import ds4_model_api
 from config.settings import Setting
 
 
@@ -10,13 +10,13 @@ settings = Setting()
 
 src = FastAPI(
     title="tac-api",
-    description="TAC categorization of a drug",
+    description="TAC medication categorization prediction",
     version=settings.VERSION,
     root_path=settings.ROOT_PATH,
     redoc_url=None,
 )
 
-src.include_router(empowerment.empowerment_router)
+src.include_router(ds4_model_api.ds4_model_api)
 
 src.add_middleware(
     CORSMiddleware,
@@ -26,15 +26,10 @@ src.add_middleware(
     allow_headers=settings.ALLOW_HEADERS,
 )
 
-
 @src.get("/")
 async def root():
     return RedirectResponse("/docs/")
 
 
-#@src.get("/jobs/openapi.json", include_in_schema=False)
-#async def root():
-#    return RedirectResponse("/openapi.json")
-
 if __name__ == "__main__":
-    uvicorn.run(src, host="0.0.0.0", port=8000)
+    uvicorn.run(src, host="0.0.0.0", port=8000, workers=2)
