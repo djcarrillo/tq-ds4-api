@@ -1,14 +1,14 @@
 import json
 import requests
-from src.config.settings import Setting
+from config.settings import Setting
 from fastapi import APIRouter, Depends, Response, status, HTTPException
-from src.clients.auth import validate_jwt
-from src.repositories.repository_prediction_forest import RandomForest
-from src.repositories.repository_prediction_logit import LogitModel
+from clients.auth import validate_jwt
+from repositories.repository_prediction_forest import RandomForest
+from repositories.repository_prediction_logit import LogitModel
 
 
 ds4_model_api = APIRouter(
-    prefix="/empowerment",
+    prefix="/ds4_api",
     dependencies=[Depends(validate_jwt)],
     responses={200: {"description": "Not found"}},
 )

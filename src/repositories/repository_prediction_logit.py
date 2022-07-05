@@ -4,7 +4,7 @@ import numpy  as np
 import pandas as pd
 import statsmodels.api as sm
 
-from src.config.settings import Setting
+from config.settings import Setting
 
 
 path_base = os.path.dirname(os.path.realpath(__file__))

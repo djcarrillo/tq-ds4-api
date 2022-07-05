@@ -1,6 +1,6 @@
 import datetime
 
-from src.utils.conect_dynamo import init_dynamo_db
+from utils.conect_dynamo import init_dynamo_db
 
 
 def get_status_table(_table_name):

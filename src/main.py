@@ -2,7 +2,7 @@ import uvicorn
 from fastapi import FastAPI
 from starlette.responses import RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
-from src.controllers import ds4_model_api
+from controllers import ds4_model_api
 from config.settings import Setting
 
 

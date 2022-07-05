@@ -7,7 +7,7 @@ import requests
 import numpy as np
 import pandas as pd
 from sklearn import preprocessing
-from src.config.settings import Setting
+from config.settings import Setting
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import train_test_split

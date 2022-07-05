@@ -2,7 +2,7 @@ import logging
 import requests
 
 from fastapi import status, Header, HTTPException
-from src.config import settings
+from config import settings
 
 settings = settings.Setting()
 

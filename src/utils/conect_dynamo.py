@@ -1,6 +1,6 @@
 import os
 import boto3
-from src.config.settings import Setting
+from config.settings import Setting
 
 path_base = os.path.dirname(os.path.realpath(__file__))
 
